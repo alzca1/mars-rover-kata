@@ -9,50 +9,84 @@ const rover = {
 let travelLog = [];
 
 
+const obstacles = {
+  x: [0,1,2,2,4,6,7],
+  y: [6,0,2,7,4,3,8],
+
+};
+
 
 
      
 
+// TURNLEFT FUNCTION
 
-// ======================
 function turnLeft(){
   console.log("turnLeft was called!");
+  switch(rover.direction) {
+    case 'N' : 
+    rover.direction = 'W'; 
+    break; 
+    case 'W' : 
+    rover.direction = 'S'; 
+    break; 
+    case 'S' : 
+    rover.direction = 'E'; 
+    break; 
+    case 'E' : 
+    rover.direction = 'N'; 
+    break; 
+  }
+};
 
-  if(rover.direction === 'N'){
-    rover.direction = 'W';
-  } else if (rover.direction === 'W'){
-    rover.direction = 'S';
-  } else if(rover.direction === 'S'){
-    rover.direction = 'E';
-    } else if (rover.direction === 'E'){
-      rover.direction = 'N'
-    };
-}
+// TURN RIGHT FUNCTION 
 
 function turnRight(){
   console.log("turnRight was called!");
 
-  if(rover.direction === 'N'){
-    rover.direction = 'E';
-  } else if (rover.direction === 'E'){
-    rover.direction = 'S';
-  } else if(rover.direction === 'S'){
+  switch (rover.direction) {
+    case 'N' : 
+    rover.direction = 'E'; 
+    break;
+    case 'E' : 
+    rover.direction = 'S'; 
+    break; 
+    case 'S' : 
     rover.direction = 'W';
-    } else if (rover.direction === 'W'){
-      rover.direction = 'N'
-    };
-}
+    break; 
+    case 'W' :
+    rover.direction = 'N'; 
+    break; 
+  }
+};
+
+
+function checkObstacle (){
+  for (let i = 0; i < obstacles.x.length; i++){
+    if(obstacles.x[i] === rover.x && obstacles.y[i] === rover.y){
+      console.log('An obstacle was found! Order aborted!');
+      return true; 
+    } else if(rover2.x=== rover.x && rover2.y === rover.y){
+      console.log('Another rover found in your path! Order aborted!');
+      return true; 
+    } else {
+      return false; 
+    }
+  }
+};
+
+
 
 function moveForward () {
     console.log("moveForward was called");
     travelLog.push(['[x' + rover.x +',' + 'y' + rover.y + ']' ]);
     
-    if(rover.direction === 'N' && rover.y > 0){
+    if(rover.direction === 'N' && rover.y > 0 ){
       if(grid[rover.y - 1][rover.x] !== 'O'){
         rover.y--;
-      } else {
-        console.log('There is an obstacle ahead! Order cancelled!');
-      };
+        if(checkObstacle()){
+          rover.y++;
+        };
        
 
     } else if(rover.direction === 'W' && rover.x > 0){
