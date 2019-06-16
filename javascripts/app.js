@@ -8,6 +8,12 @@ const rover = {
 
 let travelLog = [];
 
+const rover2 = {
+  direction: 'N',
+  x : 5, 
+  y : 7,
+};
+
 
 const obstacles = {
   x: [0,1,2,2,4,6,7],
@@ -16,6 +22,11 @@ const obstacles = {
 };
 
 
+console.log('Welcome to the Mars Rover Simulator'); 
+console.log('To control the rover you can either give individual commands or establish a travel plan');
+console.log('The commands are the following: moveForward(), moveBackwards(), turnLeft() and turnRight');
+console.log('The flight plan can be determined by using the getListCommands(), with the set of movements between the parentheses (you only have to use the words assigned for each command to invoke it: f --> moveForward; b --> moveBackwards; l --> turnLeft; r --> turnRight) within a set of brackets, as in ---> getListCommands("ffrrbl")');
+console.log('The initial position of your rover is x:0, y:0. The location of the obstacles are yet to be determined upon your adventure!'); 
 
      
 
@@ -60,6 +71,7 @@ function turnRight(){
   }
 };
 
+// FUNCTION TO CHECK IF THERE IS ANY OBSTACLE AHEAD.
 
 function checkObstacle (){
   for (let i = 0; i < obstacles.x.length; i++){
@@ -75,41 +87,38 @@ function checkObstacle (){
   }
 };
 
-
+// MOVE FORWARD FUNCTION
 
 function moveForward () {
     console.log("moveForward was called");
     travelLog.push(['[x' + rover.x +',' + 'y' + rover.y + ']' ]);
     
-    if(rover.direction === 'N' && rover.y > 0 ){
-      if(grid[rover.y - 1][rover.x] !== 'O'){
+    if(rover.direction === 'N' && rover.y > 0 ){ // NORTHBOUND MOVEMENT
         rover.y--;
         if(checkObstacle()){
           rover.y++;
         };
        
 
-    } else if(rover.direction === 'W' && rover.x > 0){
-      if(grid[rover.y + 1][rover.x] !== 'O'){
+    } else if(rover.direction === 'W' && rover.x > 0){ // WESTBOUND MOVEMENT
       rover.x--;
-      } else {
-      console.log('There is an obstacle ahead! Order cancelled!');
-    };
-
-    } else if(rover.direction === 'S' && rover.y < 9 ){
-      if (grid[rover.y + 1][rover.x] !== 'O'){
-      rover.y++;
-      } else{
-      console.log('There is an obstacle ahead! Order cancelled!');
-    }; 
-    
-  } else if(rover.direction ==='E' && rover.x <9){
-      if(grid[rover.y][rover.x +1] !== 'O'){
-        rover.x++; 
-      } else{
-        console.log('There is an obstacle ahead! Order cancelled!')
+      if(checkObstacle()){
+        rover.x++;
       };
-      
+    
+
+    } else if(rover.direction === 'S' && rover.y < 9 ){ // SOUTHBOUND MOVEMENT
+      rover.y++;
+      if(checkObstacle()){
+        rover.y--;
+      };
+    
+  } else if(rover.direction ==='E' && rover.x <9){ //EASTBOUND MOVEMENT
+        rover.x++; 
+        if(checkObstacle()){
+          rover.x--;
+        };
+              
     } else {
       console.log('Your order tried to put the rover off the grid! Order cancelled!');
     };
@@ -121,41 +130,35 @@ function moveForward () {
 function moveBackwards () {
   console.log("moveBackwards was called");
 
-  travelLog.push(['[x' + rover.x +',' + 'y' + rover.y + ']' ]);
-
-  if(rover.direction === 'N' && rover.y < 9){
-    if(grid[rover.y + 1][rover.x] !== 'O'){
+  if(rover.direction === 'N' && rover.y < 9){ // SOUTHBOUND MOVEMENT
       rover.y++;
-    } else {
-      console.log('There is an obstacle ahead! Order cancelled!');
-    };
-    
-  } else if(rover.direction === 'W' && rover.x < 9){
-      if (grid[rover.y][rover.x +1] !== 'O'){
-        rover.x++;
-      } else {
-        console.log('There is an obstacle ahead! Order cancelled!');
-      };
-    
-  } else if(rover.direction === 'S' && rover.y > 0){
-    if(grid[rover.y - 1][rover.x] !=='O'){
+    if (checkObstacle()){
       rover.y--;
-    } else {
-      console.log('There is an obstacle ahead! Order cancelled!');
-    };
+    }
     
-  } else if(rover.direction ==='E' && rover.x > 0){
-      if(grid[rover.y][rover.x - 1] !== 'O'){
-        rover.x--; 
-      } else {
-        console.log('There is an obstacle ahead! Order cancelled!');
-      };
+    
+  } else if(rover.direction === 'W' && rover.x < 9){ // WESTBOUND MOVEMENT
+      rover.x++;
+      if (checkObstacle()){
+        rover.x--;
+      }
+    
+  } else if(rover.direction === 'S' && rover.y > 0){ //SOUTHBOUND MOVEMENT
+      rover.y--;
+      if (checkObstacle()){
+        rover.y++;
+      }
+    
+  } else if(rover.direction ==='E' && rover.x > 0){ //EASTBOUND MOVEMENT
+      rover.x--; 
+      if (checkObstacle()){
+        rover.x++;
+      }
   
   } else {
     console.log('Your order tried to put the rover off the grid! Order cancelled!');
   }
-
-  console.log(`The new position of the rover is heading ${rover.direction} row ${rover.x} column ${rover.y}`);
+  travelLog.push(['[x' + rover.x +',' + 'y' + rover.y + ']' ]);
   }
 
   
@@ -176,27 +179,14 @@ console.log('The current position of the rover is: heading ' + rover.direction +
       console.log('There was a problem!The command was not recognized!');
     }
   }
-  travelLog.push(['[x' + rover.x +',' + 'y' + rover.y + ']' ]);
+ 
   console.log('The final position of the rover is: heading ' + rover.direction + ' ' + 'row ' + rover.x + ' column ' + rover.y);
   console.log('The route taken by your rover was' + travelLog);
 }
 
 
 
-let grid = [
 
-[null, null, 'O', null, null, null, null, null, null, null],
-[null, null, null, null, null, null, null, null, null, null],
-[null, null, null, null, 'O', null, null, null, null, null],
-[null, null, null, null, null, null, null, null, 'O', null],
-[null, null, null, null, null, null, null, null, null, null],
-[null, null, 'O', null, null, null, null, null, null, null],
-[null, null, null, null, null, null, null, null, null, null],
-[null, null, null, null, null, null, null, 'O', null, null],
-[null, null, null, null, null, null, null, null, null, null],
-[null, null, null, null, null, null, null, null, null, null],
-
-]
 
 
 
