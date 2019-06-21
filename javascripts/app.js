@@ -12,7 +12,7 @@ const createGridLine = () => { // FUNCTION TO GENERATE THE RANDOM LINES OF THE G
  let line = [];
   while (i < 10){
       let randomCell = random();
-      if(randomCell < 80){
+      if(randomCell < 98){
           line.push('E ');  
       } else {
           line.push('O ');
@@ -65,28 +65,23 @@ const rover3 = {
   travelLog: []
 };
 
-
-function getPosition(rover){
-  console.log(`The current heading of rover ${rover.name} is ${rover.direction}`);
-  console.log(`The current position of rover ${rover.name} is x${rover.x} y${rover.y}`);
-}
-
-// FIRST OF ALL, WE INITIATE THE GRID
-
-createGrid();
-roverFirstPosition();
-console.log('Welcome to the Mars Rover Simulator! If you need instructions to operate the rover, type "getHelp()".Please, feel free to wander around martian soil :) ');
-console.log('The updated Mars map for today is below. Have a good trip!');
-printGrid();
-
-// SECONDLY, WE REPRESENT EACH OF THE ROVERS IN THE GRID
-
 function roverFirstPosition (){
   grid[rover1.y][rover1.x] = rover1.name;
   grid[rover2.y][rover2.x] = rover2.name;
   grid[rover3.y][rover3.x] = rover3.name;
 }
 
+
+
+function getRoverPosition(rover){
+  console.log(`The current heading of rover ${rover.name} is ${rover.direction}`);
+  console.log(`The current position of rover ${rover.name} is x${rover.x} y${rover.y}`);
+}
+
+function initialInfo () {
+  console.log('Welcome to the Mars Rover Simulator! If you need instructions to operate the rover, type "getHelp()". Please, feel free to wander around martian soil :) ');
+  console.log('The updated Mars map for today is below. Have a good trip!') 
+}
 
 function getHelp(){
   console.log('To control the rover you can either give individual commands or establish a travel plan');
@@ -97,8 +92,21 @@ function getHelp(){
 
 
 
+function roverNewPosition () {
+  console.log(`The new heading of rover${rover.name} is ${rover.direction}`);
+}
+
+// FIRST OF ALL, WE INITIATE THE GRID
+
+createGrid();
+roverFirstPosition();
+initialInfo();
+printGrid();
 
 
+
+
+// SECONDLY, WE REPRESENT EACH OF THE ROVERS IN THE GRID
 
 
      
@@ -106,7 +114,7 @@ function getHelp(){
 // TURNLEFT FUNCTION
 
 function turnLeft(rover){
-  console.log("turnLeft was called!");
+  console.log(`turn left for ${rover.name} was called!`);
   switch(rover.direction) {
     case 'N' : 
     rover.direction = 'W'; 
@@ -121,14 +129,16 @@ function turnLeft(rover){
     rover.direction = 'N'; 
     break; 
   }
+
   printGrid();
-  console.log(`The new heading of rover${rover.name} is ${rover.direction}`);
+  getRoverPosition(rover);
+  
 };
 
 // TURN RIGHT FUNCTION 
 
 function turnRight(rover){
-  console.log("turnRight was called!");
+  console.log(`turn right for for ${rover.name} was called!`);
 
   switch (rover.direction) {
     case 'N' : 
@@ -145,7 +155,7 @@ function turnRight(rover){
     break; 
   }
   printGrid();
-console.log(`The new heading of rover${rover.name} is ${rover.direction}`);
+  getRoverPosition(rover);
 };
 
 // FUNCTION TO CHECK IF THERE IS ANY OBSTACLE AHEAD.
@@ -156,7 +166,7 @@ console.log(`The new heading of rover${rover.name} is ${rover.direction}`);
 
 function moveForward (rover) {
     
-    console.log("moveForward was called");
+    console.log(`move forward for ${rover.name} was called!`);
     
     
     switch (rover.direction) {
@@ -223,7 +233,7 @@ function moveForward (rover) {
 // MOVE BACKWARDS FUNCTION 
 
 function moveBackwards (rover) {
-  console.log("moveBackwards was called");
+  console.log(`move backwards for ${rover.name} was called!`);
 
   switch (rover.direction) {
     case 'N':
@@ -281,31 +291,94 @@ function moveBackwards (rover) {
           break;
   };
   rover.travelLog.push('[x' + rover.x +',' + 'y' + rover.y + ']');
-  console.log(grid);
+  printGrid();
 };
 
   
 
-function commandList (list,rover) {
-console.log('The current position of the rover is: heading ' + rover.direction + ' ' + 'row ' + rover.x + 'column ' + rover.y);
-
+function sendCommandList (rover,list) {
   for(let i = 0; i < list.length; i++){
     if(list[i] === 'f'){
-      moveForward();
+      moveForward(rover);
+      getRoverPosition(rover);
     } else if (list[i] === 'b'){
-      moveBackwards();
+      moveBackwards(rover);
+      getRoverPosition(rover);
     } else if (list[i] === 'r'){
-      turnRight();
+      turnRight(rover);
+      getRoverPosition(rover);
     } else if (list[i] === 'l'){
-      turnLeft(); 
+      turnLeft(rover);
+      getRoverPosition(rover);
     } else {
       console.log('There was a problem!The command was not recognized!');
     }
   }
  
-  console.log(`The final position of  ${rover} is: 'heading` + rover.direction + ' ' + 'row ' + rover.x + ' column ' + rover.y);
-  console.log(`The route taken by your ${rover} was ` + travelLog.rover);
+  
 }
+
+function sendCommand (rover, command) {
+
+  switch (command) {
+
+    case 'f':
+      moveForward(rover);
+      break; 
+
+    case 'b': 
+      moveForward(rover); 
+      break;
+    
+    case 'r':
+      turnRight(rover); 
+      break; 
+    
+    case 'l': 
+    turnLeft(rover); 
+    break; 
+  
+    }
+
+
+}
+
+function promptRover () {
+  const rover = prompt ('Please, state the name of your rover');
+  return rover; 
+}
+
+function promptRoverPlan (){
+  const plan = prompt("Please, state your rover's travel plan");
+  return plan; 
+}
+
+function alternateCommandsPrompt (){
+  const fleet = []; 
+  const plans = []; 
+
+
+}
+
+function alternateCommands () {
+  
+  const fleet = [rover1, rover2, rover3]
+  const plans = ['frfrlbl','bbrffrb', 'fffffff']
+
+  for (let i = 0; i < plans.length; i++){
+    for (let j = 0; j < fleet.length; j++)
+    sendCommand(fleet[j], plans[j][i]);
+  }
+  
+  for(let x = 0; x < fleet.length; x++){
+    console.log(`The route of ${fleet[x].name} was `+ fleet[x].travelLog)
+  }
+}
+
+
+
+
+
 
 
 
